@@ -21,8 +21,10 @@ app.use(morgan("dev"));
 
 const upload = multer({ dest: "uploads/" });
 
-// const drive = google.drive("v3");
-// Endpoint pro nahrávání souboru
+app.get("/", (req, res) => {
+  res.send("hello");
+});
+
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const key = JSON.parse(env.parsed.GOOGLE_SERVICE_ACCOUNT_KEY);
