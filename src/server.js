@@ -6,11 +6,12 @@ import helmet from "helmet";
 import { google } from "googleapis";
 import path from "path";
 import fs from "fs";
-
+import { configDotenv } from "dotenv";
 import multer from "multer";
 
 const app = express();
 const port = 3000;
+const env = configDotenv();
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -29,10 +30,8 @@ const storage = multer.diskStorage({
   },
 });
 
-// Cesta k souboru s klíčem pro Google Drive
-const keyFilePath = path.join(process.cwd(), "src/key/service-account.json"); // Upravte cestu k souboru
 // const drive = google.drive("v3");
-
+const key = JSON.parse(env.parsed.GOOGLE_SERVICE_ACCOUNT_KEY);
 // Endpoint pro nahrávání souboru
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
@@ -46,7 +45,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     // Ověření autentizace
     const auth = new google.auth.GoogleAuth({
-      keyFile: keyFilePath,
+      credentials: key,
       scopes: ["https://www.googleapis.com/auth/drive.file"],
     });
 
