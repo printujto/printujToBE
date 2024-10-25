@@ -15,7 +15,7 @@ console.log(port);
 
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
 
