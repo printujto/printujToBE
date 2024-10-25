@@ -11,6 +11,7 @@ import multer from "multer";
 const app = express();
 const env = configDotenv();
 const port = env.parsed.PORT;
+console.log(port);
 
 app.use(express.json());
 app.use(bodyParser.json());
