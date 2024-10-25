@@ -4,14 +4,13 @@ import morgan from "morgan";
 import express from "express";
 import helmet from "helmet";
 import { google } from "googleapis";
-import path from "path";
 import fs from "fs";
 import { configDotenv } from "dotenv";
 import multer from "multer";
 
 const app = express();
-const port = 3000;
 const env = configDotenv();
+const port = env.parsed.PORT;
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -21,26 +20,19 @@ app.use(morgan("dev"));
 
 const upload = multer({ dest: "uploads/" });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Složka pro dočasné uložení
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // Ponechat původní název souboru
-  },
-});
-
 // const drive = google.drive("v3");
-const key = JSON.parse(env.parsed.GOOGLE_SERVICE_ACCOUNT_KEY);
 // Endpoint pro nahrávání souboru
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
+    const key = JSON.parse(env.parsed.GOOGLE_SERVICE_ACCOUNT_KEY);
+    const folderID = env.parsed.FILE_ID;
+
     const filePath = req.file.path;
 
     // Metadata pro soubor
     const fileMetadata = {
       name: req.file.originalname,
-      parents: ["1X20I3aCQxCD1o8CyX9l9RYSpVqvdzm8V"], // Zde vložte ID vaší složky "models"
+      parents: [folderID], // Zde vložte ID vaší složky "models"
     };
 
     // Ověření autentizace
