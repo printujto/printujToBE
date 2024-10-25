@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    const key = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+    const key = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
     console.log(key);
 
     const folderID = process.env.FILE_ID;
